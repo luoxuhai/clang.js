@@ -49,7 +49,7 @@
     </div>
 
     <script type="module">
-      import { init, run } from '../dist/clang.js';
+      import { init, run } from 'https://cdn.jsdelivr.net/npm/clang.js/+esm';
 
       const codeEl = document.getElementById('code');
       const buttonEl = document.getElementById('run');
@@ -75,6 +75,10 @@ int main() {
         code = e.target.value;
       });
       buttonEl.addEventListener('click', async () => {
+        while (consoleEl.firstChild) {
+          consoleEl.removeChild(consoleEl.firstChild);
+        }
+
         if (!isInitialed) {
           buttonEl.textContent = 'Fetching';
           try {

@@ -5,7 +5,9 @@
 
 ## Overview
 
-![](./shot.jpg)
+[![](./shot.jpg)](https://clangjs.netlify.app)
+
+[Live Demo](https://clangjs.netlify.app)
 
 This repo is extending the great work from [Ben Smith](https://twitter.com/binjimint) [published in his CppCon 2019 WebAssembly talk](https://www.youtube.com/watch?time_continue=4&v=5N4b-rU-OAA). The WebAssembly binaries are copied from Ben's fork of [llvm-project](https://github.com/binji/llvm-project/releases).
 
@@ -26,7 +28,11 @@ import { init, run } from 'clang.js';
 
 async function main() {
   await init({
-    // The path to the wasm resources
+    // The path to the wasm resources:
+    // - clang.wasm
+    // - lld.wasm
+    // - memfs.wasm
+    // - sysroot.tar
     path: 'https://cdn.jsdelivr.net/npm/clang.js/dist',
   });
 
