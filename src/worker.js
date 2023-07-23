@@ -19,15 +19,15 @@ import { API } from './common';
 let api;
 let port;
 
-const apiOptions = {
+const genApiOptions = (path) => ({
   async readBuffer(filename) {
-    const response = await fetch(`${location.origin}/dist/${filename}`);
+    const response = await fetch(`${path}/${filename}`);
     return response.arrayBuffer();
   },
 
   async compileStreaming(filename) {
     if (WebAssembly.compileStreaming) {
-      return WebAssembly.compileStreaming(fetch(`${location.origin}/dist/${filename}`));
+      return WebAssembly.compileStreaming(fetch(`${path}/${filename}`));
     } else {
       const response = await fetch(filename);
       return WebAssembly.compile(await response.arrayBuffer());
@@ -37,7 +37,7 @@ const apiOptions = {
   hostWrite(s) {
     port.postMessage({ id: 'write', data: s });
   },
-};
+});
 
 let currentApp = null;
 
@@ -46,10 +46,10 @@ const onAnyMessage = async (event) => {
 
   switch (id) {
     case 'constructor':
-      port = payload;
+      port = payload.port;
       port.onmessage = onAnyMessage;
 
-      api = new API(apiOptions);
+      api = new API(genApiOptions(payload.path));
       api.ready.then(() => {
         port.postMessage({ id: 'ready' });
       });

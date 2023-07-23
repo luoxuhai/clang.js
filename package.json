@@ -1,16 +1,23 @@
 {
   "name": "clang.js",
-  "version": "0.1.0",
-  "description": "",
-  "main": "src/index.js",
+  "version": "0.1.1",
+  "description": "Run C/C++ in the Browser.",
+  "main": "dist/clang.cjs.js",
+  "module": "dist/clang.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "rollup -c -w --environment ENV:development --bundleConfigAsCjs",
-    "build": "rollup -c --bundleConfigAsCjs",
+    "build": "rollup -c --environment ENV:production --bundleConfigAsCjs",
     "clean": "rimraf dist/*"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "webassembly",
+    "clang",
+    "cpp"
+  ],
+  "files": [
+    "dist"
+  ],
+  "author": "luoxuhai <darkce97@gmail.com> (https://github.com/luoxuhai)",
   "license": "Apache-2.0",
   "devDependencies": {
     "@rollup/plugin-replace": "^5.0.2",

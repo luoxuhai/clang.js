@@ -3,7 +3,7 @@ import WebWorker from 'web-worker:./worker.js';
 class WorkerAPI {
   onReady;
   readyResolve;
-  constructor() {
+  constructor(path) {
     this.nextResponseId = 0;
     this.responseCBs = new Map();
     this.worker = new WebWorker();
@@ -12,7 +12,16 @@ class WorkerAPI {
     this.port.onmessage = this.onmessage.bind(this);
 
     const remotePort = channel.port2;
-    this.worker.postMessage({ id: 'constructor', payload: remotePort }, [remotePort]);
+    this.worker.postMessage(
+      {
+        id: 'constructor',
+        payload: {
+          port: remotePort,
+          path,
+        },
+      },
+      [remotePort],
+    );
     this.onReady = new Promise((resolve) => {
       this.readyResolve = resolve;
     });
@@ -83,32 +92,28 @@ export let isInitialed = false;
 
 let api;
 
-export async function init() {
-  api = new WorkerAPI();
+export async function init({ path }) {
+  if (isInitialed) {
+    return;
+  }
+  api = new WorkerAPI(path || location.origin);
   await api.onReady;
   isInitialed = true;
-  console.log('Ready');
-  window.api = api;
 }
 
-/**
- * 编译
- */
+// TODO
 export async function compile(code, options) {}
 
-/**
- * 链接
- */
+// TODO
 export async function link(obj, out, options) {}
 
-/**
- * 执行
- */
+// TODO
 export async function execute(out, params, options) {}
 
 /**
- * 编译 + 链接 + 执行
+ * compile + link + execute
  */
-export async function run(code, params, options) {
-  return await api.run(code, params, options);
+export async function run(code) {
+  // TODO: params, options
+  return await api.run(code);
 }
