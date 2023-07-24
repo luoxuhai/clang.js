@@ -56,6 +56,7 @@
       const consoleEl = document.getElementById('console');
 
       let isInitialed = false;
+      let isRunning = false;
 
       let code = `
 #include <iostream>
@@ -75,6 +76,12 @@ int main() {
         code = e.target.value;
       });
       buttonEl.addEventListener('click', async () => {
+        if (isRunning) {
+          return;
+        }
+
+        isRunning = true;
+
         while (consoleEl.firstChild) {
           consoleEl.removeChild(consoleEl.firstChild);
         }
@@ -97,6 +104,7 @@ int main() {
         run(code).finally(() => {
           setTimeout(() => {
             buttonEl.textContent = 'Run';
+            isRunning = false;
           }, 500);
         });
       });
