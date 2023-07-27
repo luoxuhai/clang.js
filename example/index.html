@@ -13,9 +13,9 @@
       }
 
       #console,
-      #code {
-        width: 400px;
-        height: 300px;
+      #editor {
+        width: 500px;
+        height: 450px;
         border: 1px solid #000;
         padding: 5px;
         overflow: auto;
@@ -30,50 +30,52 @@
       }
 
       #run {
-        width: 60px;
+        width: 70px;
         height: 30px;
       }
     </style>
-  </head>
-  <body>
-    <div id="container">
-      <div>
-        <p>Input C/C++ Code:</p>
-        <textarea type="text" id="code"></textarea>
-      </div>
-      <button id="run">Run</button>
-      <div>
-        <p>Output:</p>
-        <div id="console"></div>
-      </div>
-    </div>
-
+    <link href="https://cdn.jsdelivr.net/npm/ace-builds@1.23.4/css/ace.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.23.4/src-min-noconflict/ace.min.js"></script>
     <script type="module">
       import { init, run } from 'https://cdn.jsdelivr.net/npm/clang.js/+esm';
 
       const codeEl = document.getElementById('code');
+      const aceEditor = ace.edit('editor');
+      aceEditor.setTheme('ace/theme/xcode');
+      aceEditor.getSession().setMode('ace/mode/c_cpp');
+      aceEditor.setOptions({
+        fontSize: '14px',
+      });
+
       const buttonEl = document.getElementById('run');
       const consoleEl = document.getElementById('console');
 
       let isInitialed = false;
       let isRunning = false;
 
-      let code = `
-#include <iostream>
+      let code = `#include <iostream>
+#include <vector>
 using namespace std;
 
-int fib(int n) {
-  if (n < 2) return n;
-  return fib(n-1) + fib(n-2);
+double average(std::vector<int>& nums) {
+  int sum = 0;
+  for(int num : nums) {
+      sum += num;
+  }
+  return static_cast<double>(sum) / nums.size();
 }
 
 int main() {
-  cout << "fib(10) = " << fib(10) << endl;
-}`;
+  std::vector<int> nums = {1, 2, 3, 4, 5};
+  double avg = average(nums);
+  std::cout << "Average is: " << avg << std::endl;
+  return 0;
+}
+`;
 
-      codeEl.value = code;
-      codeEl.addEventListener('change', (e) => {
-        code = e.target.value;
+      aceEditor.setValue(code);
+      aceEditor.getSession().on('change', () => {
+        code = aceEditor.getSession().getValue();
       });
       buttonEl.addEventListener('click', async () => {
         if (isRunning) {
@@ -122,5 +124,18 @@ int main() {
         consoleEl.appendChild(el);
       };
     </script>
+  </head>
+  <body>
+    <div id="container">
+      <div>
+        <p>Input C/C++ Code:</p>
+        <div id="editor" class="editor"></div>
+      </div>
+      <button id="run">Run</button>
+      <div>
+        <p>Output:</p>
+        <div id="console"></div>
+      </div>
+    </div>
   </body>
 </html>
