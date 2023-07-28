@@ -74,6 +74,7 @@ int main() {
 `;
 
       aceEditor.setValue(code);
+      aceEditor.getSelection().clearSelection();
       aceEditor.getSession().on('change', () => {
         code = aceEditor.getSession().getValue();
       });
